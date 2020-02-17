@@ -1,3 +1,4 @@
+import urllib
 from collections import namedtuple
 
 from flask import Flask, jsonify, redirect, url_for, request
@@ -19,14 +20,14 @@ def weather(city):
     with request.urlopen(link) as response:
         if response.getcode() == 200:
             set_status("ok")
-            source = response.read()
-            data = json.loads(source)
-            data = json.dumps(data)
+            dictionary = json.load(response)
+            # temporary_data = json.dumps(dictionary)
+            # data = jsonify(temporary_data)
             return jsonify(
-                clouds=cloud_status(data),
-                humidity=humidity_status(data),
-                pressure=pressure_status(data),
-                temperature=temperature_status(data)
+                clouds=cloud_status(dictionary),
+                humidity=humidity_status(dictionary),
+                pressure=pressure_status(dictionary),
+                temperature=temperature_status(dictionary)
             )
         elif response.getcode() == 400:
             set_status("error")
@@ -71,9 +72,8 @@ def ping():
 
 # Weather functions
 def cloud_status(data):
-    x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-    x = json.dumps(x)
-    temp = x.clouds.all
+    temp = data.get('clouds', {}).get('all')
+    print(temp)
     if 10 >= temp >= 0:
         return "clear sky"
     elif 36 >= temp > 10:
@@ -89,24 +89,20 @@ def cloud_status(data):
 
 
 def humidity_status(data):
-    x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-    x = json.dumps(x);
-    humidity = x.main.humidity + "%"
+    value = data.get('main', {}).get('humidity')
+    humidity = value + "%"
     return humidity
 
 
 def pressure_status(data):
-    x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-    x = json.dumps(x);
-    pressure = x.main.pressure + " hPa"
+    value = data.get('main', {}).get('pressure')
+    pressure = value + " hPa"
     return pressure
 
 
 def temperature_status(data):
-    x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
-    x = json.dumps(x);
-    temperature_kelvin = x.main.temp + " hPa"
-    temperature_celsius = temperature_kelvin - 273.15
+    value = data.get('main', {}).get('temp')
+    temperature_celsius = value - 273.15
     return temperature_celsius
 
 
@@ -126,4 +122,3 @@ def set_status(status_code):
 # Running our little program
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
-
