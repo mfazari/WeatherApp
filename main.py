@@ -15,12 +15,13 @@ api_key = os.environ['api_key']
 # Routes
 @app.route('/forecast/<city>', methods=['GET'])
 def weather(city):
-    link = "api.openweathermap.org/data/2.5/weather?q={" + city + "}&appid={" + api_key + "}"
+    link = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + api_key
     with request.urlopen(link) as response:
         if response.getcode() == 200:
             set_status("ok")
             source = response.read()
             data = json.loads(source)
+            data = json.dumps(data)
             return jsonify(
                 clouds=cloud_status(data),
                 humidity=humidity_status(data),
@@ -32,6 +33,12 @@ def weather(city):
             return jsonify(
                 error="no city provided",
                 error_code="invalid request"
+            )
+        elif response.getcode() == 401:
+            set_status("error")
+            return jsonify(
+                error="unauthorized",
+                error_code="unauthorized request"
             )
         elif response.getcode() == 404:
             set_status("error")
@@ -53,7 +60,7 @@ def weather(city):
             )
 
 
-@app.route('/ping', method=['GET'])
+@app.route('/ping')
 def ping():
     return jsonify(
         name="weatherservice",
@@ -65,6 +72,7 @@ def ping():
 # Weather functions
 def cloud_status(data):
     x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    x = json.dumps(x)
     temp = x.clouds.all
     if 10 >= temp >= 0:
         return "clear sky"
@@ -82,18 +90,21 @@ def cloud_status(data):
 
 def humidity_status(data):
     x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    x = json.dumps(x);
     humidity = x.main.humidity + "%"
     return humidity
 
 
 def pressure_status(data):
     x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    x = json.dumps(x);
     pressure = x.main.pressure + " hPa"
     return pressure
 
 
 def temperature_status(data):
     x = json.loads(data, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    x = json.dumps(x);
     temperature_kelvin = x.main.temp + " hPa"
     temperature_celsius = temperature_kelvin - 273.15
     return temperature_celsius
@@ -114,6 +125,5 @@ def set_status(status_code):
 
 # Running our little program
 if __name__ == '__main__':
-    print(os.environ['public_key'])
     app.run(debug=True, port=8080)
 
