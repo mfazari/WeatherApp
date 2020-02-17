@@ -1,7 +1,5 @@
 import urllib
-from collections import namedtuple
-
-from flask import Flask, jsonify, redirect, url_for, request
+from flask import Flask, jsonify
 import os
 import json
 import urllib.request
@@ -32,31 +30,31 @@ def weather(city):
             )
     except urllib.error.HTTPError as e:
         if e.code == 400:
-            set_status("error")
+            set_status("400 error")
             return jsonify(
                 error="no city provided",
                 error_code="invalid request"
             )
         elif e.code == 401:
-            set_status("error")
+            set_status("401 error")
             return jsonify(
                 error="unauthorized",
                 error_code="unauthorized request"
             )
         elif e.code == 404:
-            set_status("error")
+            set_status("404 error")
             return jsonify(
                 error="Cannot find city " + city,
                 error_code="city not found"
             )
         elif e.code == 500:
-            set_status("error")
+            set_status("500 error")
             return jsonify(
                 error="Something went wrong",
                 error_code="internal server error"
             )
         elif e.code == 429:
-            set_status("error")
+            set_status("429 error")
             return jsonify(
                 error="Too many API calls",
                 error_code="API calls overload"
@@ -122,6 +120,6 @@ def set_status(status_code):
     status = status_code
 
 
-# Running our little program
+# Running on port 8080
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
