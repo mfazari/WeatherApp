@@ -101,8 +101,8 @@ def pressure_status(data):
 
 
 def temperature_status(data):
-    value = data.get('main', {}).get('temp')
-    temperature_celsius = value - 273.15
+    temperature_kelvin = data.get('main', {}).get('temp')
+    temperature_celsius = str(round(temperature_kelvin - 273.15, 1)) + "C"
     return temperature_celsius
 
 
