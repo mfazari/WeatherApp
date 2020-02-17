@@ -4,7 +4,8 @@ from collections import namedtuple
 from flask import Flask, jsonify, redirect, url_for, request
 import os
 import json
-import urllib.request as request
+import urllib.request
+import urllib.error
 
 app = Flask(__name__)
 
@@ -17,43 +18,44 @@ api_key = os.environ['api_key']
 @app.route('/forecast/<city>', methods=['GET'])
 def weather(city):
     link = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + api_key
-    with request.urlopen(link) as response:
-        if response.getcode() == 200:
-            set_status("ok")
-            dictionary = json.load(response)
-            # temporary_data = json.dumps(dictionary)
-            # data = jsonify(temporary_data)
-            return jsonify(
-                clouds=cloud_status(dictionary),
-                humidity=humidity_status(dictionary),
-                pressure=pressure_status(dictionary),
-                temperature=temperature_status(dictionary)
+    try:
+        response = urllib.request.urlopen(link)
+        set_status("ok")
+        dictionary = json.load(response)
+        # temporary_data = json.dumps(dictionary)
+        # data = jsonify(temporary_data)
+        return jsonify(
+            clouds=cloud_status(dictionary),
+            humidity=humidity_status(dictionary),
+            pressure=pressure_status(dictionary),
+            temperature=temperature_status(dictionary)
             )
-        elif response.getcode() == 400:
+    except urllib.error.HTTPError as e:
+        if e.code == 400:
             set_status("error")
             return jsonify(
                 error="no city provided",
                 error_code="invalid request"
             )
-        elif response.getcode() == 401:
+        elif e.code == 401:
             set_status("error")
             return jsonify(
                 error="unauthorized",
                 error_code="unauthorized request"
             )
-        elif response.getcode() == 404:
+        elif e.code == 404:
             set_status("error")
             return jsonify(
-                error="Cannot find city" + city,
+                error="Cannot find city " + city,
                 error_code="city not found"
             )
-        elif response.getcode() == 500:
+        elif e.code == 500:
             set_status("error")
             return jsonify(
                 error="Something went wrong",
                 error_code="internal server error"
             )
-        elif response.getcode() == 429:
+        elif e.code == 429:
             set_status("error")
             return jsonify(
                 error="Too many API calls",
