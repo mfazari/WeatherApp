@@ -90,13 +90,13 @@ def cloud_status(data):
 
 def humidity_status(data):
     value = data.get('main', {}).get('humidity')
-    humidity = value + "%"
+    humidity = str(value) + "%"
     return humidity
 
 
 def pressure_status(data):
     value = data.get('main', {}).get('pressure')
-    pressure = value + " hPa"
+    pressure = str(value) + " hPa"
     return pressure
 
 
