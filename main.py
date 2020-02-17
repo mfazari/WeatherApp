@@ -116,6 +116,7 @@ def get_version():
 
 # Sets Status
 def set_status(status_code):
+    global status
     status = status_code
 
 
