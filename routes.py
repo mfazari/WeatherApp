@@ -7,14 +7,13 @@ import urllib.error
 
 # global variables
 status = "undefined"
-api_key = os.environ['api_key']
 
 
 # Routes
 def configure_routes(app):
     @app.route('/forecast/<city>', methods=['GET'])
     def weather(city):
-        link = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + api_key
+        link = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + os.environ['api_key']
         try:
             response = urllib.request.urlopen(link)
             set_status("ok")
