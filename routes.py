@@ -16,7 +16,7 @@ def configure_routes(app):
         link = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + os.environ['api_key']
         try:
             response = urllib.request.urlopen(link)
-            set_status("ok")
+            set_status("ok 200")
             dictionary = json.load(response)
             return jsonify(
                 clouds=cloud_status(dictionary),

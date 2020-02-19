@@ -30,32 +30,29 @@ Getting it running
 
 1. Open Terminal
 2. Go to the project directory via cd
-3. Execute 
+3. This app uses flask for routing. There are other choices like Django, but we want to keep it simple. We need to install it:
 
-```bash
-pip install requirements.txt
-``` 
-which should install all packages necessary to run our project.
+    ```
+    pip install flask
+    ``` 
+
 4. If you're not familiar with enviromental variables, read [this](https://towardsdatascience.com/how-to-hide-your-api-keys-in-python-fb2e1a61b0a0).
 5. Take your API Key (from openweathermap) and set it as 'api_key'.
 6. Run script with
 
-```bash
-python app.py
-```
+    ```
+    python app.py
+    ```
 
 How to run tests:
 1. Install pytest
-```bash
-pip install -U pytest
-```
+    ```
+    pip install -U pytest
+    ```
 2. Run with
-```bash
-pytest
-```
- 
-**Please fill this section out, imagine we are starting with a brand new
-installation of ubuntu 18.04 and we know nothing about your implementation**
+    ```
+    pytest
+    ```
 
 The Service
 -----------
