@@ -1,12 +1,11 @@
+import platform
 import urllib
-from flask import Flask, jsonify
+from flask import jsonify
 import os
 import json
 import urllib.request
 import urllib.error
-
-# global variables
-status = "undefined"
+import subprocess
 
 
 # Routes
@@ -16,7 +15,6 @@ def configure_routes(app):
         link = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + os.environ['api_key']
         try:
             response = urllib.request.urlopen(link)
-            set_status("ok")
             dictionary = json.load(response)
             return jsonify(
                 clouds=cloud_status(dictionary),
@@ -26,25 +24,21 @@ def configure_routes(app):
             )
         except urllib.error.HTTPError as e:
             if e.code == 401:
-                set_status("401 error")
                 return jsonify(
                     error="unauthorized",
                     error_code="unauthorized request"
                 )
             elif e.code == 404:
-                set_status("404 error")
                 return jsonify(
                     error="Cannot find city " + city,
                     error_code="city not found"
                 )
             elif e.code == 500:
-                set_status("500 error")
                 return jsonify(
                     error="Something went wrong",
                     error_code="internal server error"
                 )
             elif e.code == 429:
-                set_status("429 error")
                 return jsonify(
                     error="Too many API calls",
                     error_code="API calls overload"
@@ -62,7 +56,7 @@ def configure_routes(app):
     def ping():
         return jsonify(
             name="weatherservice",
-            status=status,
+            status=check_ping(),
             version=get_version()
         )
 
@@ -112,9 +106,18 @@ def get_version():
 
 
 # Sets Status
-def set_status(status_code):
-    global status
-    status = status_code
+def check_ping():
+    host = "localhost:8080/forecast/london"
+
+    # Option for the number of packets as a function of
+    param = '-n' if platform.system().lower() == 'windows' else '-c'
+
+    # Building the command
+    command = ['ping', param, '1', host]
+    if subprocess.call(command) != 0:
+        return "OK"
+    else:
+        return "bad"
 
 # contextmanager
 # Don't do global variables
