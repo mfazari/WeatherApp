@@ -40,10 +40,10 @@ How to run tests:
     pytest
     ```
 
-Testing
+Calls
 -----------
 
-We would use [curl](https://curl.haxx.se/) to make the following calls:
+You can use [curl](https://curl.haxx.se/) to test the following calls:
 
 ### `/ping`
 

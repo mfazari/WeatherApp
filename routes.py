@@ -1,11 +1,9 @@
-import platform
 import urllib
 from flask import jsonify
 import os
 import json
 import urllib.request
 import urllib.error
-import subprocess
 
 
 # Routes
@@ -107,14 +105,12 @@ def get_version():
 
 # Sets Status
 def check_ping():
-    host = "localhost:8080/forecast/london"
+    hostname = "localhost"
+    response = os.system("ping -c 1 " + hostname)
 
-    # Option for the number of packets as a function of
-    param = '-n' if platform.system().lower() == 'windows' else '-c'
-
-    # Building the command
-    command = ['ping', param, '1', host]
-    if subprocess.call(command) != 0:
+    # and then check the response...
+    if response == 0:
+        print(response)
         return "OK"
     else:
         return "bad"

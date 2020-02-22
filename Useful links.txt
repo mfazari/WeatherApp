@@ -1,0 +1,12 @@
+Links for weather app
+
+https://stackoverflow.com/questions/23463684/how-to-get-nested-dictionary-key-value-with-get
+https://stackoverflow.com/questions/423379/using-global-variables-in-a-function
+https://stackoverflow.com/questions/1726402/in-python-how-do-i-use-urllib-to-see-if-a-website-is-404-or-200
+https://www.journaldev.com/23642/python-concatenate-string-and-int
+https://stackoverflow.com/questions/13921910/python-urllib2-receive-json-response-from-url
+https://stackoverflow.com/questions/57664997/return-400-error-as-response-in-a-flask-api
+https://www.pluralsight.com/guides/importing-data-from-json-resource-with-python
+https://www.tutorialspoint.com/flask/flask_url_building.htm
+https://stackoverflow.com/questions/13081532/return-json-response-from-flask-view
+https://github.com/aaronjolson/flask-pytest-example
