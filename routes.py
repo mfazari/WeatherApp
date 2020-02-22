@@ -115,3 +115,6 @@ def get_version():
 def set_status(status_code):
     global status
     status = status_code
+
+# contextmanager
+# Don't do global variables
