@@ -1,5 +1,6 @@
 import urllib
 from flask import jsonify
+from flask_caching import Cache
 import os
 import json
 import urllib.request
@@ -8,7 +9,18 @@ import urllib.error
 
 # Routes
 def configure_routes(app):
+    # Cache
+    config = {
+        "DEBUG": True,  # some Flask specific configs
+        "CACHE_TYPE": "simple",  # Flask-Caching related configs
+        "CACHE_DEFAULT_TIMEOUT": 300
+    }
+    # tell Flask to use the above defined config
+    app.config.from_mapping(config)
+    cache = Cache(app)
+
     @app.route('/forecast/<city>', methods=['GET'])
+    @cache.cached(timeout=50)  # cache this view
     def weather(city):
         link = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + os.environ['api_key']
         try:
@@ -62,7 +74,6 @@ def configure_routes(app):
 # Weather functions
 def cloud_status(data):
     temp = data.get('clouds', {}).get('all')
-    print(temp)
     if 10 >= temp >= 0:
         return "clear sky"
     elif 36 >= temp > 10:
