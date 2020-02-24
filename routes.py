@@ -5,6 +5,7 @@ import os
 import json
 import urllib.request
 import urllib.error
+import location
 
 
 # Routes
@@ -22,6 +23,9 @@ def configure_routes(app):
     @app.route('/forecast/<city>', methods=['GET'])
     @cache.cached(timeout=50)  # cache this view
     def weather(city):
+        if city == 'here':
+            city = location.location_route()
+
         link = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + os.environ['api_key']
         try:
             response = urllib.request.urlopen(link)
@@ -55,13 +59,14 @@ def configure_routes(app):
                 )
 
     # Error route in case no city is provided throws 400
+    '''
     @app.route('/forecast/')
     def no_input():
         return jsonify(
             error="no city provided",
             error_code="invalid request",
         ), 400
-
+    '''
     @app.route('/ping')
     def ping():
         return jsonify(

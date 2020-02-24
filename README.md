@@ -80,6 +80,10 @@ Content-Type: application/json; charset=utf-8
 }
 ```
 
+### `/forecast/here`
+
+Gives you weather information based on your current location. For that the [ipstack](https://ipstack.com) API is being used.
+
 ### Errors
 
 Error messages will look like this:
