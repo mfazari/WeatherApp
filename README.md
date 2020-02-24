@@ -98,4 +98,6 @@ Content-Type: application/json; charset=utf-8
     "error_code": "country not found"
 }
 ```
-
+Copyright
+------------
+Massimo Fazari 2020.
