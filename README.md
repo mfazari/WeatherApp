@@ -1,12 +1,13 @@
 Weather service
 ===============
 
+*I built an app using this service for iOS devices. Follow this [link.](https://github.com/mfazari/WeatherAPP_Frontend-Swift)*
 
 Introduction
 ------------
 
 This is an HTTP service which provides an API to get a weather
-forecast for a given city.
+forecast for a given place.
 
 The [openweathermap](https://www.openweathermap.org) is being used as API. The API requires an API key that can be obtained for free
 after [signing up](https://home.openweathermap.org/users/sign_up)
