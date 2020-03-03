@@ -31,10 +31,13 @@ def configure_routes(app):
             response = urllib.request.urlopen(link)
             dictionary = json.load(response)
             return jsonify(
+                location=location_name(dictionary),
                 clouds=cloud_status(dictionary),
                 humidity=humidity_status(dictionary),
                 pressure=pressure_status(dictionary),
-                temperature=temperature_status(dictionary)
+                temperature=temperature_status(dictionary),
+                icon=icon_name(dictionary),
+                condition=condition_status(dictionary)
             )
         except urllib.error.HTTPError as e:
             if e.code == 401:
@@ -67,6 +70,7 @@ def configure_routes(app):
             error_code="invalid request",
         ), 400
     '''
+
     @app.route('/ping')
     def ping():
         return jsonify(
@@ -109,6 +113,24 @@ def temperature_status(data):
     temperature_kelvin = data.get('main', {}).get('temp')
     temperature_celsius = str(round(temperature_kelvin - 273.15, 1)) + "C"
     return temperature_celsius
+
+
+def icon_name(data):
+    temp = data.get('weather')
+    icon_number = temp[0]["icon"]
+    return icon_number
+
+
+def condition_status(data):
+    temp = data.get('weather')
+    condition = temp[0]["main"]
+    return condition
+
+
+def location_name(data):
+    temp = data.get('name')
+    name = str(temp)
+    return name
 
 
 # Returns Version Number from Version file
